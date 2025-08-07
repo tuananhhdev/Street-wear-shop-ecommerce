@@ -1,16 +1,14 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 import { Gender } from 'src/common/types/user/user.type';
-
-
 
 
 @Schema({ timestamps: true })
 export class User {
-    @Prop({ required: true })
+    @Prop({ required: true, index: true })
     fullName: string;
 
-    @Prop({ required: true, unique: true })
+    @Prop({ required: true, unique: true, index: true })
     email: string;
 
     @Prop({ required: true })
@@ -24,6 +22,15 @@ export class User {
 
     @Prop({ required: true })
     gender: Gender;
+
+    @Prop({ default: false })
+    isDeleted: boolean;
+
+    @Prop({ type: Types.ObjectId, ref: 'User', default: null })
+    deletedBy: string;
+
+    @Prop({ default: null })
+    deletedAt: Date
 
 }
 
