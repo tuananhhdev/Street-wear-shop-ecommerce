@@ -11,15 +11,14 @@ export class GlobalExceptionFilter implements ExceptionFilter {
         const request = ctx.getRequest<Request>();
         const status = exception.getStatus ? exception.getStatus() : 500;
 
-        // Log lỗi chi tiết
-        this.logger.error(`[${request.method}] ${request.url} - Error: ${exception.message}`, exception.stack);
+        this.logger.error(`[${request.method}] ${request.url} - Error: ${exception.message}`);
+        // this.logger.error(`[${request.method}] ${request.url} - Error: ${exception.message}`, exception.stack);
 
-        // Trả về response lỗi
         response.status(status).json({
             statusCode: status,
-            timestamp: new Date().toISOString(),
-            path: request.url,
             message: exception.message || 'Internal Server Error',
+            path: request.url,
+            timestamp: new Date().toISOString(),
         });
     }
 }

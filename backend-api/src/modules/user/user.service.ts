@@ -22,7 +22,7 @@ export class UserService {
         }
 
         const [data, total] = await Promise.all([
-            this.userModel.find(filter).skip(skip).limit(pageSize).select('-password -__v').lean(),
+            this.userModel.find(filter).skip(skip).limit(pageSize).select('-password -__v -isDeleted -deletedBy -deletedAt').lean(),
             this.userModel.countDocuments(filter),
         ]);
 
@@ -38,5 +38,12 @@ export class UserService {
 
     }
 
-   
+    async findOne(id: string) {
+        const userExist = await this.userModel.findOne({ _id: id, isDeleted: false }).select('-password -__v -isDeleted -deletedBy -deletedAt ').lean()
+        if (!userExist) throw new NotFoundException('Người dùng không tồn tại hoặc đã bị xóa')
+            
+        return userExist
+    }
+
+
 }
