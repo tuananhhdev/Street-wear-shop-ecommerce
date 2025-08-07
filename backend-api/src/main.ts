@@ -1,17 +1,22 @@
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { Logger, ValidationPipe } from '@nestjs/common';
-import { PORT } from './common/constant/app.constant';
-import { SwaggerModule } from "@nestjs/swagger"
-import './common/util/validationEnv.util';
+import { BadRequestException, Logger, ValidationPipe } from '@nestjs/common';
+import { ResponseInterceptor } from './common/interceptors/response.interceptor';
 import { swaggerConfig } from './common/configs/swagger.config';
+import { SwaggerModule } from '@nestjs/swagger';
+import { GlobalExceptionFilter } from './common/filters/global-exception.filter';
 
 async function bootstrap() {
-  const logger = new Logger('Bootstrap')
-  const app = await NestFactory.create(AppModule);
+  const logger = new Logger('Bootstrap');
+  const app = await NestFactory.create(AppModule, {
+    logger: ['log', 'error', 'warn', 'debug', 'verbose'],
+  });
 
-  app.enableCors()
-  app.setGlobalPrefix('api')
+  app.useLogger(logger);
+
+  app.setGlobalPrefix('api');
+  app.enableCors();
+
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -19,12 +24,18 @@ async function bootstrap() {
     }),
   );
 
+  const reflector = app.get(Reflector);
+  app.useGlobalInterceptors(new ResponseInterceptor(reflector));
+  app.useGlobalFilters(new GlobalExceptionFilter());
+
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('api-docs', app, document, {
-    swaggerOptions: { persistAuthorization: true }
+    swaggerOptions: { persistAuthorization: true },
   });
 
-  await app.listen(PORT ?? 5000);
-  logger.log(`Application is running on port http://localhost:${PORT}/api`)
+  const port = process.env.PORT || 5000;
+  await app.listen(port);
+  logger.log(`🚀 Application is running on http://localhost:${port}/api`);
+  logger.log(`📜 API docs is running on http://localhost:${port}/api-docs`);
 }
 bootstrap();
