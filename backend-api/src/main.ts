@@ -5,6 +5,7 @@ import { ResponseInterceptor } from './common/interceptors/response.interceptor'
 import { swaggerConfig } from './common/configs/swagger.config';
 import { SwaggerModule } from '@nestjs/swagger';
 import { GlobalExceptionFilter } from './common/filters/global-exception.filter';
+import { ProtectGuard } from './modules/auth/protect/protect.guard';
 
 async function bootstrap() {
   const logger = new Logger('Bootstrap');
@@ -25,6 +26,7 @@ async function bootstrap() {
   );
 
   const reflector = app.get(Reflector);
+  app.useGlobalGuards(new ProtectGuard(reflector));
   app.useGlobalInterceptors(new ResponseInterceptor(reflector));
   app.useGlobalFilters(new GlobalExceptionFilter());
 

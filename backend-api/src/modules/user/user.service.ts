@@ -3,6 +3,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { UserDocument } from './schema/user.schema';
 import { FindAllUsersDto } from './dto/find-all-user.dto';
+import cloudinary from 'src/common/configs/cloundinary.config';
+import sharp from "sharp"
 
 @Injectable()
 export class UserService {
@@ -41,9 +43,51 @@ export class UserService {
     async findOne(id: string) {
         const userExist = await this.userModel.findOne({ _id: id, isDeleted: false }).select('-password -__v -isDeleted -deletedBy -deletedAt ').lean()
         if (!userExist) throw new NotFoundException('Người dùng không tồn tại hoặc đã bị xóa')
-            
+
         return userExist
     }
+
+    async uploadAvatarByAdmin(id: string, file: Express.Multer.File) {
+        const userExist = await this.userModel.findOne({ _id: id, isDeleted: false });
+        if (!userExist) throw new NotFoundException('Người dùng không tồn tại hoặc đã bị xóa');
+        if (!file) throw new NotFoundException('Không có file tải lên');
+
+        if (userExist.avatar) {
+            await cloudinary.uploader.destroy(userExist.avatar);
+        }
+
+        const processedBuffer = await sharp(file.buffer)
+            .resize(800, 800, { fit: 'inside', withoutEnlargement: true })
+            .toFormat('jpeg', { quality: 80 })
+            .toBuffer();
+
+        const uploadResult = await new Promise<any>((resolve, reject) => {
+            cloudinary.uploader.upload_stream(
+                {
+                    folder: 'avatars',
+                    context: { alt: `Avatar của ${userExist.fullName}` },
+                },
+                (error, result) => {
+                    if (error) return reject(error);
+                    resolve(result);
+                },
+            ).end(processedBuffer);
+        });
+
+        userExist.avatar = uploadResult.public_id;
+        await userExist.save();
+
+        return {
+            userId: userExist._id,
+            avatar: {
+                publicId: uploadResult.public_id,
+                url: uploadResult.secure_url,
+                thumbnailUrl: `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/image/upload/c_thumb,w_150,h_150/${uploadResult.public_id}`,
+                originalUrl: uploadResult.secure_url,
+            },
+        };
+    }
+
 
 
 }

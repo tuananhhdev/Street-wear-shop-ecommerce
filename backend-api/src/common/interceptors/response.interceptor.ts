@@ -3,6 +3,7 @@ import {
     ExecutionContext,
     Injectable,
     NestInterceptor,
+    Logger,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Observable } from 'rxjs';
@@ -11,6 +12,8 @@ import { RESPONSE_MESSAGE_KEY } from '../decorators/response-message.decorator';
 
 @Injectable()
 export class ResponseInterceptor implements NestInterceptor {
+    private readonly logger = new Logger(ResponseInterceptor.name);
+
     constructor(private readonly reflector: Reflector) { }
 
     intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
@@ -29,15 +32,26 @@ export class ResponseInterceptor implements NestInterceptor {
             this.reflector.get<string>(RESPONSE_MESSAGE_KEY, context.getHandler()) ??
             'Success';
 
+        const start = Date.now();
+
         return next.handle().pipe(
-            map((data) => ({
-                status: 'success',
-                statusCode,
-                message,
-                data,
-                docs: docUrl,
-                timestamp: new Date().toISOString(),
-            })),
+            map((data) => {
+                const responseTime = Date.now() - start;
+                const response = {
+                    status: 'success',
+                    statusCode,
+                    message,
+                    data,
+                    docs: docUrl,
+                    timestamp: new Date().toISOString(),
+                };
+
+                this.logger.log(
+                    `[${req.method}] ${req.url} - Status: ${statusCode} - Message: ${message} - Time: ${responseTime}ms`,
+                );
+
+                return response;
+            }),
         );
     }
 }

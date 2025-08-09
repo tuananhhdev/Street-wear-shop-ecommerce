@@ -5,12 +5,14 @@ import { RegisterAuthDto } from './dto/register-auth.dto';
 import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { RefreshTokenAuthDto } from './dto/refresh-token.dto';
+import { Public } from 'src/common/decorators/is-public.decorator';
 
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) { }
 
+  @Public()
   @Post('register')
   @ApiOperation({ summary: 'Đăng ký tài khoản' })
   @ResponseMessage('Đăng ký tài khoản thành công')
@@ -20,6 +22,7 @@ export class AuthController {
     return this.authService.register(dto)
   }
 
+  @Public()
   @Post('login')
   @ApiOperation({ summary: 'Đăng nhập tài khoản' })
   @ResponseMessage('Đăng nhập tài khoản thành công')
@@ -29,6 +32,7 @@ export class AuthController {
     return this.authService.login(dto)
   }
 
+  @Public()
   @Post('refresh-token')
   @ApiOperation({ summary: 'Làm mói token khi access token hết hạn' })
   @ResponseMessage('Làm mới token thành công')

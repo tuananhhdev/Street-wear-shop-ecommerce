@@ -1,9 +1,11 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, Param, Post, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { UserService } from './user.service';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
 import { FindAllUsersDto } from './dto/find-all-user.dto';
 import { ObjectIdValidationPipe } from 'src/common/pipe/object-id.pipe';
+import { FileInterceptor } from "@nestjs/platform-express"
+import { imageUploadOptions } from 'src/common/configs/upload.config';
 
 @ApiTags('Users')
 @Controller('users')
@@ -26,5 +28,18 @@ export class UserController {
     @Param('id', ObjectIdValidationPipe) id: string
   ) {
     return this.userService.findOne(id)
+  }
+
+  // dành cho Admin
+  @Post('upload-avatar/:id')
+  @ApiOperation({ summary: 'Tải lên avatar người dùng' })
+  @ResponseMessage('Tải lên avatar người dùng thành công')
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(FileInterceptor('avatar', imageUploadOptions(5)))
+  uploadAvatarByAdmin(
+    @Param("id", ObjectIdValidationPipe) id: string,
+    @UploadedFile() file: Express.Multer.File
+  ) {
+    return this.userService.uploadAvatarByAdmin(id, file)
   }
 }

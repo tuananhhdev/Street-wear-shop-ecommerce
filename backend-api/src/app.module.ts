@@ -7,6 +7,8 @@ import { DATABASE_URL } from './common/constant/app.constant';
 import chalk from "chalk"
 import { attachMongoConnectionEvents } from './common/database/mongo.logger';
 import { UserModule } from './modules/user/user.module';
+import { TokenModule } from './modules/auth/token/token.module';
+import { ProtectStrategy } from './modules/auth/protect/protect.strategy';
 @Module({
   imports: [MongooseModule.forRoot(DATABASE_URL, {
     serverSelectionTimeoutMS: 10000,
@@ -16,8 +18,8 @@ import { UserModule } from './modules/user/user.module';
       attachMongoConnectionEvents(connection)
       return connection;
     }
-  }), AuthModule, UserModule],
+  }), TokenModule, AuthModule, UserModule],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, ProtectStrategy],
 })
-export class AppModule {}
+export class AppModule { }
