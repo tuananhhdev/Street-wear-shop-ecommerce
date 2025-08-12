@@ -1,8 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Role, RoleDocument } from './schema/role.schema';
 import { FindAllRolesDto } from './dto/find-all-role.dto';
+import { CreateRoleDto } from './dto/create-role.dto';
 
 @Injectable()
 export class RolesService {
@@ -43,13 +44,25 @@ export class RolesService {
         })
     }
 
-    async findOn() { }
     async findOne(id: string) {
         const role = await this.roleModel.findById(id).select('-__v -isDeleted -deletedBy -deletedAt').lean();
         if (!role) {
             throw new NotFoundException(`Không tìm thấy vai trò với ID này`);
         }
         return role;
+    }
+
+    async create(body: CreateRoleDto) {
+        const { name } = body
+        const roleExist = await this.roleModel.findOne({ name }).lean()
+
+        if (roleExist) {
+            throw new ConflictException(`Vai trò với tên "${name}" đã tồn tại`);
+        }
+
+        const newRole = await this.roleModel.create(body);
+
+        return newRole
     }
 
 

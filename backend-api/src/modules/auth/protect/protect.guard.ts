@@ -24,18 +24,10 @@ export class ProtectGuard extends AuthGuard('protect') {
         if (isPublic) {
             return true;
         }
-        const request = context.switchToHttp().getRequest();
-        console.log('Request headers in canActivate:', request.headers);
         return super.canActivate(context);
     }
 
     handleRequest(err: any, user: any, info: any) {
-        console.log('🛡️ ProtectGuard :: handleRequest:', {
-            err: err?.message,
-            user: user ? { id: user._id, roleId: user.roleId } : null,
-            info: info?.message
-        });
-
         if (err || !user) {
             if (info instanceof TokenExpiredError) {
                 throw new ForbiddenException(info.message);

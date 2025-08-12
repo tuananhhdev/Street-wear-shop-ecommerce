@@ -14,12 +14,9 @@ export class PermissionStrategy extends PassportStrategy(Strategy, 'permission')
   }
 
   async validate(req: any) {
-    console.log(`PermissionStrategy :: validate`);
     const user = req.user;
     const roleId = user.roleId;
 
-    // Check if user is Admin (you can replace this with actual Admin role _id)
-    // For now, we'll check by role name through populated data
     if (user.role?.name === 'Admin') {
       return true;
     }
