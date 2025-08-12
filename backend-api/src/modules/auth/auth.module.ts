@@ -5,9 +5,13 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { UserSchema } from '../user/schema/user.schema';
 import { TokenModule } from './token/token.module';
 import { JwtService } from '@nestjs/jwt';
+import { RoleSchema } from '../role/schema/role.schema';
 
 @Module({
-  imports: [MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]), TokenModule],
+  imports: [MongooseModule.forFeature([
+    { name: 'User', schema: UserSchema },
+    { name: 'Role', schema: RoleSchema },
+  ]), TokenModule],
   controllers: [AuthController],
   providers: [AuthService, JwtService],
 })

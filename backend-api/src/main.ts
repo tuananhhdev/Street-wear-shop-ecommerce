@@ -6,6 +6,7 @@ import { swaggerConfig } from './common/configs/swagger.config';
 import { SwaggerModule } from '@nestjs/swagger';
 import { GlobalExceptionFilter } from './common/filters/global-exception.filter';
 import { ProtectGuard } from './modules/auth/protect/protect.guard';
+import { PermissionGuard } from './modules/auth/permissions/permission.guard';
 
 async function bootstrap() {
   const logger = new Logger('Bootstrap');
@@ -16,7 +17,10 @@ async function bootstrap() {
   app.useLogger(logger);
 
   app.setGlobalPrefix('api');
-  app.enableCors();
+  app.enableCors({
+    origin: ['http://localhost:5174'],
+    credentials: true
+  });
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -27,6 +31,7 @@ async function bootstrap() {
 
   const reflector = app.get(Reflector);
   app.useGlobalGuards(new ProtectGuard(reflector));
+  app.useGlobalGuards(new PermissionGuard(reflector));
   app.useGlobalInterceptors(new ResponseInterceptor(reflector));
   app.useGlobalFilters(new GlobalExceptionFilter());
 

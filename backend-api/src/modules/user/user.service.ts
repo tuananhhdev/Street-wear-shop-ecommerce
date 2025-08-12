@@ -18,15 +18,22 @@ export class UserService {
         const filter: any = { isDeleted: false };
         if (query.search) {
             filter.$or = [
-                { name: { $regex: query.search, $options: 'i' } },
+                { fullName: { $regex: query.search, $options: 'i' } },
                 { email: { $regex: query.search, $options: 'i' } },
             ];
         }
 
         const [data, total] = await Promise.all([
-            this.userModel.find(filter).skip(skip).limit(pageSize).select('-password -__v -isDeleted -deletedBy -deletedAt').lean(),
+            this.userModel
+                .find(filter)
+                .skip(skip)
+                .limit(pageSize)
+                .populate('roleId', '-__v') 
+                .select('-password -__v -isDeleted -deletedBy -deletedAt')
+                .lean(),
             this.userModel.countDocuments(filter),
         ]);
+
 
         return {
             items: data,

@@ -9,17 +9,26 @@ import { attachMongoConnectionEvents } from './common/database/mongo.logger';
 import { UserModule } from './modules/user/user.module';
 import { TokenModule } from './modules/auth/token/token.module';
 import { ProtectStrategy } from './modules/auth/protect/protect.strategy';
+import { RolesModule } from './modules/role/role.module';
+import { PermissionsModule } from './modules/permissions/permissions.module';
+import { RolePermissionsModule } from './modules/role-permissions/role-permissions.module';
+import { PermissionStrategy } from './modules/auth/permissions/permission.strategy';
+import { RolePermission, RolePermissionSchema } from './modules/role-permissions/schema/role-permission.schema';
 @Module({
-  imports: [MongooseModule.forRoot(DATABASE_URL, {
-    serverSelectionTimeoutMS: 10000,
-    connectionFactory: (connection) => {
-      const logger = new Logger('MongoDB');
-      logger.log(chalk.green('✅ MongoDB connected successfully'));
-      attachMongoConnectionEvents(connection)
-      return connection;
-    }
-  }), TokenModule, AuthModule, UserModule],
+  imports: [
+    MongooseModule.forRoot(DATABASE_URL, { /* ... */ }),
+    MongooseModule.forFeature([
+      { name: RolePermission.name, schema: RolePermissionSchema },
+    ]),
+    TokenModule,
+    AuthModule,
+    UserModule,
+    RolesModule,
+    PermissionsModule,
+    RolePermissionsModule
+  ],
   controllers: [AppController],
-  providers: [AppService, ProtectStrategy],
+  providers: [AppService, ProtectStrategy, PermissionStrategy],
 })
-export class AppModule { }
+export class AppModule {}
+

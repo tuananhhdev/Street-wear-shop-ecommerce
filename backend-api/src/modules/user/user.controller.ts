@@ -6,12 +6,14 @@ import { FindAllUsersDto } from './dto/find-all-user.dto';
 import { ObjectIdValidationPipe } from 'src/common/pipe/object-id.pipe';
 import { FileInterceptor } from "@nestjs/platform-express"
 import { imageUploadOptions } from 'src/common/configs/upload.config';
+import { PermissionKey } from 'src/common/enums/permission-key.enum';
 
 @ApiTags('Users')
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) { }
 
+  // dành cho Admin
   @Get()
   @ApiOperation({ summary: 'Lấy tất cả người dùng' })
   @ResponseMessage('Lấy tất cả người dùng thành công')
@@ -21,6 +23,7 @@ export class UserController {
     return this.userService.findAll(query)
   }
 
+  // dành cho Admin
   @Get(':id')
   @ApiOperation({ summary: 'Lấy người dùng theo ID - dành cho Admin' })
   @ResponseMessage('Lấy người dùng theo ID thành công')
@@ -32,7 +35,7 @@ export class UserController {
 
   // dành cho Admin
   @Post('upload-avatar/:id')
-  @ApiOperation({ summary: 'Tải lên avatar người dùng' })
+  @ApiOperation({ summary: 'Tải lên avatar người dùng - dành cho Admin' })
   @ResponseMessage('Tải lên avatar người dùng thành công')
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor('avatar', imageUploadOptions(5)))

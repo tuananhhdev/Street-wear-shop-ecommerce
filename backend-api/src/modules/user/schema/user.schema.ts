@@ -3,7 +3,10 @@ import { Document, Types } from 'mongoose';
 import { Gender } from 'src/common/types/user/user.type';
 
 
-@Schema({ timestamps: true })
+@Schema({
+    timestamps: true,
+    versionKey: false
+})
 export class User {
     @Prop({ required: true, index: true })
     fullName: string;
@@ -14,23 +17,26 @@ export class User {
     @Prop({ required: true })
     password: string;
 
-    @Prop({ required: true })
+    @Prop({ required: false, default: null })
     phoneNumber: string;
 
     @Prop({ required: false, default: null })
     avatar: string
 
-    @Prop({ required: true })
+    @Prop({ required: false, default: null })
     address: string;
 
-    @Prop({ required: true })
+    @Prop({ required: false, default: null })
     gender: Gender;
+
+    @Prop({ type: Types.ObjectId, ref: 'Role', required: true })
+    roleId: Types.ObjectId
 
     @Prop({ default: false })
     isDeleted: boolean;
 
     @Prop({ type: Types.ObjectId, ref: 'User', default: null })
-    deletedBy: string;
+    deletedBy: Types.ObjectId;
 
     @Prop({ default: null })
     deletedAt: Date
@@ -39,5 +45,11 @@ export class User {
 
 export type UserDocument = User & Document;
 
-
 export const UserSchema = SchemaFactory.createForClass(User);
+
+UserSchema.virtual('role', {
+    ref: 'Role',
+    localField: 'roleId',
+    foreignField: '_id',
+    justOne: true,
+});

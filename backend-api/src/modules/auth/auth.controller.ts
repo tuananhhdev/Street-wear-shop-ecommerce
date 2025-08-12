@@ -5,7 +5,7 @@ import { RegisterAuthDto } from './dto/register-auth.dto';
 import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { RefreshTokenAuthDto } from './dto/refresh-token.dto';
-import { Public } from 'src/common/decorators/is-public.decorator';
+import { Public } from 'src/common/decorators/public.decorator';
 
 @ApiTags('Auth')
 @Controller('auth')

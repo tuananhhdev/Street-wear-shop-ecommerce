@@ -11,8 +11,8 @@ export class GlobalExceptionFilter implements ExceptionFilter {
         const request = ctx.getRequest<Request>();
         const status = exception.getStatus ? exception.getStatus() : 500;
 
-        this.logger.error(`[${request.method}] ${request.url} - Error: ${exception.message}`);
-        // this.logger.error(`[${request.method}] ${request.url} - Error: ${exception.message}`, exception.stack);
+        // this.logger.error(`[${request.method}] ${request.url} - Error: ${exception.message}`);
+        this.logger.error(`[${request.method}] ${request.url} - Error: ${exception.message}`, exception.stack);
 
         response.status(status).json({
             statusCode: status,

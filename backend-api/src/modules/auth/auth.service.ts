@@ -9,33 +9,40 @@ import { TokenService } from './token/token.service';
 import { RefreshTokenAuthDto } from './dto/refresh-token.dto';
 import { JwtService } from '@nestjs/jwt';
 import { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } from 'src/common/constant/app.constant';
+import { RoleDocument } from '../role/schema/role.schema';
 
 @Injectable()
 export class AuthService {
     constructor(
         @InjectModel('User') private readonly userModel: Model<UserDocument>,
+        @InjectModel('Role') private readonly roleModel: Model<RoleDocument>,
         private readonly tokenService: TokenService,
         private readonly jwtService: JwtService
     ) { }
 
     async register(dto: RegisterAuthDto) {
-        const userExist = await this.userModel.findOne({ email: dto.email })
-        if (userExist) {
-            throw new BadRequestException("Tài khoản đã tồn tại")
-        }
+        const userExist = await this.userModel.findOne({ email: dto.email });
+        if (userExist) throw new BadRequestException("Tài khoản đã tồn tại, vui lòng đăng ký tài khoản khác");
 
-        const salt = bcrypt.genSaltSync(10);
-        const hashPassword = bcrypt.hashSync(dto.password, salt);
+        const customerRole = await this.roleModel.findOne({ name: 'Customer' });
+        if (!customerRole) throw new BadRequestException("Role Customer không tồn tại trong hệ thống");
 
         const user = await this.userModel.create({
             ...dto,
-            password: hashPassword
-        })
+            password: bcrypt.hashSync(dto.password, bcrypt.genSaltSync(10)),
+            roleId: customerRole._id
+        });
 
-        const { password, __v, ...newUser } = user.toObject()
-        return newUser
+        const { password, __v, roleId, ...newUser } = user.toObject();
 
+        return {
+            ...newUser,
+            role: customerRole?.name
+        };
     }
+
+
+
 
     async login(dto: LoginAuthDto) {
         const userExist = await this.userModel.findOne({ email: dto.email }).lean()
