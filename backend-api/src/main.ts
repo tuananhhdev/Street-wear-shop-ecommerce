@@ -1,6 +1,6 @@
 import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { BadRequestException, Logger, ValidationPipe } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor';
 import { swaggerConfig } from './common/configs/swagger.config';
 import { SwaggerModule } from '@nestjs/swagger';
@@ -9,7 +9,7 @@ import { ProtectGuard } from './modules/auth/protect/protect.guard';
 import { PermissionGuard } from './modules/auth/permissions/permission.guard';
 
 async function bootstrap() {
-  const logger = new Logger('Bootstrap');
+  const logger = new Logger('Application');
   const app = await NestFactory.create(AppModule, {
     logger: ['log', 'error', 'warn', 'debug', 'verbose'],
   });
@@ -19,7 +19,7 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
   app.enableCors({
     origin: ['http://localhost:5174'],
-    credentials: true
+    credentials: true,
   });
 
   app.useGlobalPipes(

@@ -11,7 +11,6 @@ export class AppService {
       description: string;
       timestamp: string
     };
-    apiDocs: string
   } {
     const currentDateTime = format(new Date(), "dd/MM/yyyy HH:mm:ss 'GMT+7'");
     return {
@@ -21,7 +20,6 @@ export class AppService {
         description: 'API dành cho ứng dụng bán quần áo streetwear - quản lý người dùng, sản phẩm và đơn hàng.',
         timestamp: currentDateTime,
       },
-      apiDocs: `http://localhost:${PORT}/api-docs`,
     };
   }
 }

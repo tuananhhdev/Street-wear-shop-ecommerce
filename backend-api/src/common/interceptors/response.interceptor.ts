@@ -14,44 +14,49 @@ import { RESPONSE_MESSAGE_KEY } from '../decorators/response-message.decorator';
 export class ResponseInterceptor implements NestInterceptor {
     private readonly logger = new Logger(ResponseInterceptor.name);
 
-    constructor(private readonly reflector: Reflector) { }
+    constructor(private readonly reflector: Reflector) {}
 
     intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-        const res = context.switchToHttp().getResponse();
-        const req = context.switchToHttp().getRequest();
-
-        const statusCode = res.statusCode;
-
-        const baseUrl = `${req.protocol}://${req.get('host')}/api-docs`;
-        const methodName = context.getHandler().name;
-        const controllerName = context.getClass().name;
-        const tag = controllerName.replace('Controller', '');
-        const docUrl = `${baseUrl}#/${tag}/${methodName}`;
-
-        const message =
-            this.reflector.get<string>(RESPONSE_MESSAGE_KEY, context.getHandler()) ??
-            'Success';
-
-        const start = Date.now();
+        const request = context.switchToHttp().getRequest();
+        const response = context.switchToHttp().getResponse();
+        const startTime = Date.now();
 
         return next.handle().pipe(
             map((data) => {
-                const responseTime = Date.now() - start;
-                const response = {
+                const endTime = Date.now();
+                const responseTime = endTime - startTime;
+                
+                const statusCode = response.statusCode;
+                const message = this.reflector.get<string>(
+                    RESPONSE_MESSAGE_KEY,
+                    context.getHandler()
+                ) || 'Success';
+
+                const baseUrl = `${request.protocol}://${request.get('host')}`;
+                const controllerName = context.getClass().name.replace('Controller', '');
+                const methodName = context.getHandler().name;
+                const docsUrl = `${baseUrl}/api-docs#/${controllerName}/${methodName}`;
+
+                const userInfo = request.user ? `User: ${request.user._id}` : 'Anonymous';
+                const logMessage = `[${request.method}] ${request.url} | Status: ${statusCode} | ${userInfo} | ${responseTime}ms | ${message}`;
+                
+                if (statusCode >= 200 && statusCode < 300) {
+                    this.logger.log(`✅ ${logMessage}`);
+                } else if (statusCode >= 400) {
+                    this.logger.warn(`⚠️ ${logMessage}`);
+                } else {
+                    this.logger.log(logMessage);
+                }
+
+                return {
                     status: 'success',
                     statusCode,
                     message,
                     data,
-                    docs: docUrl,
+                    docs: docsUrl,
                     timestamp: new Date().toISOString(),
                 };
-
-                this.logger.log(
-                    `[${req.method}] ${req.url} - Status: ${statusCode} - Message: ${message} - Time: ${responseTime}ms`,
-                );
-
-                return response;
-            }),
+            })
         );
     }
 }

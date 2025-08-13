@@ -38,6 +38,7 @@ export class PermissionGuard extends AuthGuard('permission') {
             throw err || new BadRequestException(info.message);
         }
 
+        console.log('PermissionGuard :: handleRequest --> ', user);
 
         return user;
     }

@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Post, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Query, Req, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
@@ -6,7 +6,9 @@ import { FindAllUsersDto } from './dto/find-all-user.dto';
 import { ObjectIdValidationPipe } from 'src/common/pipe/object-id.pipe';
 import { FileInterceptor } from "@nestjs/platform-express"
 import { imageUploadOptions } from 'src/common/configs/upload.config';
-import { PermissionKey } from 'src/common/enums/permission-key.enum';
+import type { Request } from 'express';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { SkipPermission } from 'src/common/decorators/skip-permission.decorator';
 
 @ApiTags('Users')
 @Controller('users')
@@ -21,6 +23,18 @@ export class UserController {
     @Query() query: FindAllUsersDto
   ) {
     return this.userService.findAll(query)
+  }
+
+  // dành cho khách hàng
+  @SkipPermission()
+  @Patch()
+  @ApiOperation({ summary: 'Cập nhật thông tin người dùng - dành cho khách hàng' })
+  @ResponseMessage('Cập nhật thông tin người dùng thành công')
+  updateByCustomer(
+    @Req() req: Request,
+    @Body() body: UpdateUserDto
+  ) {
+    return this.userService.updateByCustomer(req.user, body)
   }
 
   // dành cho Admin
