@@ -22,12 +22,16 @@ async function bootstrap() {
     credentials: true,
   });
 
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-      forbidNonWhitelisted: true,
-    }),
-  );
+app.useGlobalPipes(
+  new ValidationPipe({
+    whitelist: true,
+    forbidNonWhitelisted: true,
+    transform: true, // Thêm dòng này
+    transformOptions: {
+      enableImplicitConversion: true,
+    },
+  }),
+);
 
   const reflector = app.get(Reflector);
   app.useGlobalGuards(new ProtectGuard(reflector));
