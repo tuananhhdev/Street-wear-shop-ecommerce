@@ -1,0 +1,756 @@
+/* CSS Variables for consistent animations */
+:root {
+  --transition-fast: 0.15s ease-out;
+  --transition-normal: 0.25s ease-out;
+  --transition-slow: 0.35s ease-out;
+  --bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --smooth: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Dark theme base with smooth loading */
+.swagger-ui {
+  background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
+  color: #e5e7eb;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  animation: fadeIn 0.6s var(--smooth);
+  will-change: opacity;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Hide top bar with smooth transition */
+.swagger-ui .topbar {
+  display: none;
+}
+
+/* Main wrapper with stagger animation */
+.swagger-ui .wrapper {
+  background: transparent;
+  padding: 0 20px;
+  animation: slideInUp 0.8s var(--smooth) 0.1s both;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Info section with bounce entrance */
+.swagger-ui .info {
+  background: #262626;
+  border-radius: 12px;
+  padding: 24px;
+  margin: 20px 0;
+  border: 1px solid #404040;
+  animation: bounceIn 0.8s var(--bounce) 0.2s both;
+  transition: all var(--transition-normal);
+}
+
+.swagger-ui .info:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) translateY(20px);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.05) translateY(-5px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Animated title with typewriter effect */
+.swagger-ui .info .title {
+  color: #ffffff;
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  margin-bottom: 12px;
+  animation: titleGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes titleGlow {
+  from {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+  to {
+    text-shadow:
+      0 2px 4px rgba(0, 0, 0, 0.3),
+      0 0 20px rgba(59, 130, 246, 0.3);
+  }
+}
+
+/* Description with fade-in delay */
+.swagger-ui .info .description {
+  color: #d1d5db;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  animation: fadeInLeft 0.8s var(--smooth) 0.4s both;
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Auth section with pulse animation */
+.swagger-ui .scheme-container {
+  background: linear-gradient(135deg, #374151 0%, #1f2937 100%);
+  color: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  margin: 20px 0;
+  border: 1px solid #4b5563;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  animation: slideInRight 0.8s var(--smooth) 0.3s both;
+  transition: all var(--transition-normal);
+}
+
+.swagger-ui .scheme-container:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Server selection with smooth dropdown */
+.swagger-ui .servers > label {
+  color: #e5e7eb;
+  font-weight: 500;
+  transition: color var(--transition-fast);
+}
+
+.swagger-ui .servers select {
+  background: #374151;
+  border: 1px solid #4b5563;
+  color: #ffffff;
+  border-radius: 8px;
+  padding: 8px 12px;
+  transition: all var(--transition-normal);
+  cursor: pointer;
+}
+
+.swagger-ui .servers select:hover {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.swagger-ui .servers select:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+  outline: none;
+}
+
+/* Operations blocks with staggered entrance */
+.swagger-ui .opblock {
+  background: #262626;
+  border: 1px solid #404040;
+  border-radius: 12px;
+  margin: 16px 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  animation: slideInUp 0.6s var(--smooth);
+  transition: all var(--transition-normal);
+  will-change: transform, box-shadow;
+}
+
+.swagger-ui .opblock:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.swagger-ui .opblock:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.swagger-ui .opblock:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.swagger-ui .opblock:nth-child(4) {
+  animation-delay: 0.4s;
+}
+.swagger-ui .opblock:nth-child(5) {
+  animation-delay: 0.5s;
+}
+
+.swagger-ui .opblock:hover {
+  transform: translateY(-3px) scale(1.01);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+}
+
+/* Method colors with animated borders */
+.swagger-ui .opblock.opblock-get {
+  border-left: 4px solid #3b82f6;
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  position: relative;
+}
+
+.swagger-ui .opblock.opblock-get::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #3b82f6, transparent);
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+.swagger-ui .opblock.opblock-post {
+  border-left: 4px solid #10b981;
+  background: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
+  position: relative;
+}
+
+.swagger-ui .opblock.opblock-post::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #10b981, transparent);
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+.swagger-ui .opblock.opblock-put {
+  border-left: 4px solid #f59e0b;
+  background: linear-gradient(135deg, #451a03 0%, #78350f 100%);
+  position: relative;
+}
+
+.swagger-ui .opblock.opblock-put::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #f59e0b, transparent);
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+.swagger-ui .opblock.opblock-delete {
+  border-left: 4px solid #ef4444;
+  background: linear-gradient(135deg, #450a0a 0%, #7f1d1d 100%);
+  position: relative;
+}
+
+.swagger-ui .opblock.opblock-delete::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #ef4444, transparent);
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+.swagger-ui .opblock.opblock-patch {
+  border-left: 4px solid #8b5cf6;
+  background: linear-gradient(135deg, #2e1065 0%, #4c1d95 100%);
+  position: relative;
+}
+
+.swagger-ui .opblock.opblock-patch::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #8b5cf6, transparent);
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Operation headers with smooth expand */
+.swagger-ui .opblock .opblock-summary {
+  padding: 16px 20px;
+  border-bottom: 1px solid #404040;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+}
+
+.swagger-ui .opblock .opblock-summary:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Method badges with bounce hover */
+.swagger-ui .opblock .opblock-summary-method {
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.875rem;
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+
+.swagger-ui .opblock .opblock-summary-method:hover {
+  transform: scale(1.05);
+}
+
+/* Operation text with smooth transitions */
+.swagger-ui .opblock .opblock-summary-path,
+.swagger-ui .opblock .opblock-summary-description {
+  color: #e5e7eb;
+  transition: color var(--transition-fast);
+}
+
+/* Expanded content with slide down */
+.swagger-ui .opblock-body {
+  background: #1f1f1f;
+  padding: 20px;
+  animation: slideDown 0.4s var(--smooth);
+  transform-origin: top;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: scaleY(0.8);
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    transform: scaleY(1);
+    max-height: 1000px;
+  }
+}
+
+/* Parameters section with stagger */
+.swagger-ui .parameters-container {
+  background: #2d2d2d;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 12px 0;
+  animation: fadeInUp 0.5s var(--smooth);
+  transition: all var(--transition-normal);
+}
+
+.swagger-ui .parameters-container:hover {
+  background: #333333;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.swagger-ui .parameter__name {
+  color: #ffffff;
+  font-weight: 600;
+  transition: color var(--transition-fast);
+}
+
+.swagger-ui .parameter__type {
+  color: #9ca3af;
+  transition: color var(--transition-fast);
+}
+
+/* Input fields with focus animations */
+.swagger-ui input[type='text'],
+.swagger-ui input[type='password'],
+.swagger-ui input[type='email'],
+.swagger-ui textarea,
+.swagger-ui select {
+  background: #374151;
+  border: 1px solid #4b5563;
+  color: #ffffff;
+  border-radius: 8px;
+  padding: 10px 12px;
+  transition: all var(--transition-normal);
+  position: relative;
+}
+
+.swagger-ui input:focus,
+.swagger-ui textarea:focus,
+.swagger-ui select:focus {
+  border-color: #3b82f6;
+  box-shadow:
+    0 0 0 3px rgba(59, 130, 246, 0.1),
+    0 0 20px rgba(59, 130, 246, 0.2);
+  outline: none;
+  transform: scale(1.02);
+}
+
+/* Buttons with advanced hover effects */
+.swagger-ui .btn {
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-weight: 600;
+  transition: all var(--transition-normal);
+  border: none;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transform: perspective(1px) translateZ(0);
+}
+
+.swagger-ui .btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.swagger-ui .btn:hover::before {
+  left: 100%;
+}
+
+.swagger-ui .btn.authorize {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
+}
+
+.swagger-ui .btn.authorize:hover {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+}
+
+.swagger-ui .btn.authorize:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.swagger-ui .btn.try-out__btn {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2);
+}
+
+.swagger-ui .btn.try-out__btn:hover {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+}
+
+.swagger-ui .btn.execute {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.2);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.2);
+  }
+  50% {
+    box-shadow: 0 4px 20px rgba(239, 68, 68, 0.4);
+  }
+}
+
+.swagger-ui .btn.execute:hover {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  transform: translateY(-2px) scale(1.02);
+  animation: none;
+  box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
+}
+
+/* Response section with smooth reveals */
+.swagger-ui .responses-wrapper {
+  background: #2d2d2d;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 16px 0;
+  animation: expandWidth 0.5s var(--smooth);
+  transition: all var(--transition-normal);
+}
+
+@keyframes expandWidth {
+  from {
+    width: 0;
+    opacity: 0;
+  }
+  to {
+    width: 100%;
+    opacity: 1;
+  }
+}
+
+.swagger-ui .response {
+  background: #1f1f1f;
+  border: 1px solid #404040;
+  border-radius: 8px;
+  margin: 8px 0;
+  animation: slideInLeft 0.4s var(--smooth);
+  transition: all var(--transition-normal);
+}
+
+.swagger-ui .response:hover {
+  border-color: #4b5563;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Code blocks with typewriter effect */
+.swagger-ui .highlight-code {
+  background: #0f0f0f;
+  border: 1px solid #404040;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 8px 0;
+  color: #e5e7eb;
+  position: relative;
+  overflow: hidden;
+}
+
+.swagger-ui .highlight-code::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 2px;
+  background: #3b82f6;
+  animation: blink 1s ease-in-out infinite;
+}
+
+@keyframes blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Schema/Model sections - Remove white outline + animations */
+.swagger-ui .model-container {
+  background: #2d2d2d;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 12px 0;
+  border: 1px solid #404040;
+  animation: scaleIn 0.4s var(--bounce);
+  transition: all var(--transition-normal);
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.swagger-ui .model-container:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.swagger-ui .model-box {
+  background: #1f1f1f !important;
+  border: 1px solid #404040 !important;
+  border-radius: 8px;
+  padding: 12px;
+  transition: all var(--transition-normal) !important;
+}
+
+.swagger-ui .model-box:focus,
+.swagger-ui .model-box:active,
+.swagger-ui .model-box:hover {
+  border: 1px solid #4b5563 !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: #262626 !important;
+}
+
+.swagger-ui .model-title {
+  color: #ffffff;
+  font-weight: 600;
+  transition: color var(--transition-fast);
+}
+
+/* Smooth scrollbar with animations */
+.swagger-ui ::-webkit-scrollbar {
+  width: 12px;
+}
+
+.swagger-ui ::-webkit-scrollbar-track {
+  background: #1f1f1f;
+  border-radius: 6px;
+}
+
+.swagger-ui ::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #4b5563 0%, #374151 100%);
+  border-radius: 6px;
+  border: 2px solid #1f1f1f;
+  transition: all var(--transition-normal);
+}
+
+.swagger-ui ::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+  transform: scale(1.1);
+}
+
+/* Filter/Search with focus animations */
+.swagger-ui .filter-container {
+  background: #2d2d2d;
+  border-radius: 8px;
+  padding: 12px;
+  margin: 16px 0;
+  animation: slideInDown 0.5s var(--smooth);
+  transition: all var(--transition-normal);
+}
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.swagger-ui .filter .operation-filter-input {
+  background: #374151;
+  border: 1px solid #4b5563;
+  color: #ffffff;
+  border-radius: 8px;
+  padding: 8px 12px;
+  transition: all var(--transition-normal);
+  width: 100%;
+}
+
+.swagger-ui .filter .operation-filter-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  transform: scale(1.01);
+}
+
+.swagger-ui .filter .operation-filter-input::placeholder {
+  color: #9ca3af;
+  transition: color var(--transition-fast);
+}
+
+/* Loading states with spinner */
+.swagger-ui .loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  color: #9ca3af;
+}
+
+.swagger-ui .loading-container::after {
+  content: '';
+  width: 40px;
+  height: 40px;
+  border: 4px solid #374151;
+  border-top: 4px solid #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Performance optimizations */
+.swagger-ui * {
+  box-sizing: border-box;
+}
+
+.swagger-ui .opblock,
+.swagger-ui .btn,
+.swagger-ui input,
+.swagger-ui .model-container {
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .swagger-ui *,
+  .swagger-ui *::before,
+  .swagger-ui *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

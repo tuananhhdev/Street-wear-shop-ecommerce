@@ -14,7 +14,7 @@ export class AuthController {
 
   @Public()
   @Post('register')
-  @ApiOperation({ summary: 'Đăng ký tài khoản' })
+  @ApiOperation({ summary: 'Đăng ký tài khoản - dành cho Khách hàng' })
   @ResponseMessage('Đăng ký tài khoản thành công')
   register(
     @Body() dto: RegisterAuthDto
@@ -24,7 +24,7 @@ export class AuthController {
 
   @Public()
   @Post('login')
-  @ApiOperation({ summary: 'Đăng nhập tài khoản' })
+  @ApiOperation({ summary: 'Đăng nhập tài khoản - dành cho Khách hàng' })
   @ResponseMessage('Đăng nhập tài khoản thành công')
   login(
     @Body() dto: LoginAuthDto
@@ -34,7 +34,7 @@ export class AuthController {
 
   @Public()
   @Post('refresh-token')
-  @ApiOperation({ summary: 'Làm mói token khi access token hết hạn' })
+  @ApiOperation({ summary: 'Làm mới token khi access token hết hạn - dành cho Khách hàng' })
   @ResponseMessage('Làm mới token thành công')
   refreshToken(
     @Body() dto: RefreshTokenAuthDto

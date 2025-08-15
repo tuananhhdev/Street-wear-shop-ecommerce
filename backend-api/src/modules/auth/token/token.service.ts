@@ -1,27 +1,31 @@
-import { Injectable } from "@nestjs/common";
-import { JwtService } from "@nestjs/jwt"
-import { ACCESS_TOKEN_EXPIRES, ACCESS_TOKEN_SECRET, REFRESH_TOKEN_EXPIRES, REFRESH_TOKEN_SECRET } from "src/common/constant/app.constant";
+import { Injectable } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import {
+  ACCESS_TOKEN_EXPIRES,
+  ACCESS_TOKEN_SECRET,
+  REFRESH_TOKEN_EXPIRES,
+  REFRESH_TOKEN_SECRET,
+} from 'src/common/constant/app.constant';
 @Injectable()
 export class TokenService {
-    constructor(private readonly jwtService: JwtService) { }
-    createTokens(userId: string) {
-        const accessToken = this.jwtService.sign(
-            { sub: userId },
-            {
-                secret: ACCESS_TOKEN_SECRET,
-                expiresIn: ACCESS_TOKEN_EXPIRES,
-            }
-        );
+  constructor(private readonly jwtService: JwtService) {}
+  createTokens(userId: string) {
+    const accessToken = this.jwtService.sign(
+      { sub: userId },
+      {
+        secret: ACCESS_TOKEN_SECRET,
+        expiresIn: ACCESS_TOKEN_EXPIRES,
+      },
+    );
 
-        const refreshToken = this.jwtService.sign(
-            { sub: userId },
-            {
-                secret: REFRESH_TOKEN_SECRET,
-                expiresIn: REFRESH_TOKEN_EXPIRES,
-            }
-        );
+    const refreshToken = this.jwtService.sign(
+      { sub: userId },
+      {
+        secret: REFRESH_TOKEN_SECRET,
+        expiresIn: REFRESH_TOKEN_EXPIRES,
+      },
+    );
 
-        return { accessToken, refreshToken };
-    }
-
+    return { accessToken, refreshToken };
+  }
 }

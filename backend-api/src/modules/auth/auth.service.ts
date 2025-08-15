@@ -41,9 +41,6 @@ export class AuthService {
         };
     }
 
-
-
-
     async login(dto: LoginAuthDto) {
         const userExist = await this.userModel.findOne({ email: dto.email }).lean()
         if (!userExist) {
@@ -91,5 +88,7 @@ export class AuthService {
 
         return tokens
     }
+
+   
 
 }
