@@ -8,7 +8,7 @@ const Home = () => {
     return (
         <>
             <BannerSlider />
-            {/* <CategoryList /> */}
+            <CategoryList />
             {/* <FeaturedProducts /> */}
             <SocialConnect />
         </>
