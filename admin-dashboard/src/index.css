@@ -1,5 +1,5 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -42,25 +42,25 @@
 }
 
 :root {
-  --radius: 0.625rem;
+  --radius: 0.75rem; /* Slightly more rounded */
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
+  --primary: oklch(0.631 0.179 255.85); /* Modern blue */
   --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.961 0.013 286.42);
+  --secondary-foreground: oklch(0.145 0 0);
+  --muted: oklch(0.961 0.013 286.42);
+  --muted-foreground: oklch(0.556 0.016 286.42);
+  --accent: oklch(0.961 0.013 286.42);
+  --accent-foreground: oklch(0.145 0 0);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --border: oklch(0.922 0.013 286.42);
+  --input: oklch(0.922 0.013 286.42);
+  --ring: oklch(0.631 0.179 255.85);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
@@ -68,53 +68,166 @@
   --chart-5: oklch(0.769 0.188 70.08);
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary: oklch(0.631 0.179 255.85);
   --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar-accent: oklch(0.961 0.013 286.42);
+  --sidebar-accent-foreground: oklch(0.145 0 0);
+  --sidebar-border: oklch(0.922 0.013 286.42);
+  --sidebar-ring: oklch(0.631 0.179 255.85);
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  /* Soft Dark Background - Không quá đậm */
+  --background: #252525; /* Gray-800 nhẹ nhàng */
+  --foreground: #f1f5f9; /* Soft white, không harsh */
+  
+  /* Card với tone nhẹ nhàng */
+  --card: #2a2a2a; /* Gray-700, sáng hơn background */
+  --card-foreground: #f1f5f9;
+  
+  /* Popover sáng hơn */
+  --popover: #2a2a2a;
+  --popover-foreground: #f1f5f9;
+
+  /* Primary - Blue dịu mắt */
+  --primary: oklch(0.65 0.12 240); /* Blue nhẹ, không chói */
+  --primary-foreground: #f8fafc;
+
+  /* Secondary - Warm gray nhẹ */
+  --secondary: #374151; /* Gray-600, sáng hơn nhiều */
+  --secondary-foreground: #f1f5f9;
+
+  /* Muted - Balanced, không quá tối */
+  --muted: #374151;
+  --muted-foreground: #cbd5e1; /* Gray-300, dễ đọc */
+
+  /* Accent - Subtle highlight nhẹ */
+  --accent: #404040; /* Sáng hơn, dễ nhìn */
+  --accent-foreground: #f8fafc;
+
+  /* Destructive - Red dịu */
+  --destructive: oklch(0.6 0.18 15); /* Red nhẹ nhàng */
+  
+  /* Borders - Nhẹ nhàng, dễ nhìn */
+  --border: #4b5563; /* Gray-600, visible nhưng soft */
+  --input: #374151; /* Input sáng để dễ thao tác */
+  --ring: oklch(0.65 0.12 240); /* Focus ring nhẹ */
+
+  /* Chart Colors - Pastel cho dark mode */
+  --chart-1: oklch(0.7 0.15 240); /* Soft blue */
+  --chart-2: oklch(0.68 0.15 160); /* Soft green */
+  --chart-3: oklch(0.75 0.18 80); /* Soft yellow */
+  --chart-4: oklch(0.65 0.18 320); /* Soft purple */
+  --chart-5: oklch(0.7 0.20 25); /* Soft orange */
+
+  /* Sidebar - Hài hòa, không quá tối */
+  --sidebar: #252525; /* Slightly lighter than background */
+  --sidebar-foreground: #f1f5f9;
+  --sidebar-primary: oklch(0.65 0.12 240);
+  --sidebar-primary-foreground: #f8fafc;
+  --sidebar-accent: #353535; /* Hover states sáng */
+  --sidebar-accent-foreground: #f8fafc;
+  --sidebar-border: #404040; /* Border dễ nhìn */
+  --sidebar-ring: oklch(0.65 0.12 240);
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+  
   body {
     @apply bg-background text-foreground;
+    /* Add smooth transitions for theme switching */
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  /* Enhanced scrollbar for dark mode */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    @apply bg-background;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    @apply bg-muted rounded-full;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-muted-foreground/50;
+  }
+  
+  /* Dark mode specific enhancements - Soft version */
+  .dark ::-webkit-scrollbar-thumb {
+    background: #4b5563; /* Lighter scrollbar */
+  }
+  
+  .dark ::-webkit-scrollbar-thumb:hover {
+    background: #6b7280; /* Even lighter on hover */
+  }
+  
+  /* Selection colors */
+  ::selection {
+    @apply bg-primary/20 text-primary-foreground;
+  }
+  
+  .dark ::selection {
+    background: oklch(0.75 0.15 260 / 0.3);
+    color: #fafafa;
+  }
+  
+  /* Focus improvements */
+  .dark input:focus,
+  .dark textarea:focus,
+  .dark select:focus {
+    box-shadow: 0 0 0 2px oklch(0.75 0.15 260 / 0.5);
+  }
+  
+  /* Smooth glass-morphism effects for cards */
+  .dark .glass-card {
+    background: rgba(26, 26, 26, 0.8);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  /* Improved button styles for dark mode */
+  .dark button:hover {
+    transition: all 0.2s ease;
+  }
+  
+  /* Loading states */
+  .dark .loading {
+    background: linear-gradient(
+      90deg, 
+      transparent, 
+      rgba(255, 255, 255, 0.1), 
+      transparent
+    );
+  }
+}
+
+/* Custom utility classes for enhanced dark mode */
+@layer utilities {
+  .glass-morphism {
+    @apply backdrop-blur-md bg-card/80 border border-border/50;
+  }
+  
+  .dark-gradient-bg {
+    background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+  }
+  
+  .dark-surface {
+    @apply bg-card border border-border shadow-xl;
+  }
+  
+  .dark-hover {
+    @apply hover:bg-accent transition-colors duration-200;
+  }
+  
+  .primary-glow {
+    box-shadow: 0 0 20px oklch(0.75 0.15 260 / 0.3);
   }
 }

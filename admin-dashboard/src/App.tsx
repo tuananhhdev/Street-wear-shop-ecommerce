@@ -1,15 +1,31 @@
+import { BrowserRouter } from 'react-router-dom';
+import AppRoutes from './routes';
+import { useCheckAuth, useIsLoading } from './stores/auth-store';
+import { useEffect } from 'react';
+
 function App() {
-  return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-      <div className="text-center">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">
-          Streetwear Admin Dashboard
-        </h1>
-        <p className="text-gray-600">
-          Axios client đã được setup. Sẵn sàng cho bước tiếp theo.
-        </p>
+  const checkAuth = useCheckAuth();
+  const isLoading = useIsLoading();
+
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
+
+  if (isLoading) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <div className="flex flex-col items-center gap-2">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+          <p className="text-sm text-muted-foreground">Đang khởi tạo...</p>
+        </div>
       </div>
-    </div>
+    );
+  }
+
+  return (
+    <BrowserRouter>
+      <AppRoutes />
+    </BrowserRouter>
   );
 }
 

@@ -3,41 +3,41 @@ import axios, {
   type AxiosResponse,
   type AxiosError,
   type InternalAxiosRequestConfig,
-} from "axios";
+} from 'axios';
 
 const BASE_URL = import.meta.env.VITE_API_URL;
 
 if (!BASE_URL) {
-  throw new Error("VITE_API_URL environment variable is required");
+  throw new Error('VITE_API_URL environment variable is required');
 }
 
 const axiosClient: AxiosInstance = axios.create({
   baseURL: BASE_URL,
   timeout: 15000,
   headers: {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   },
 });
 
 const refreshClient: AxiosInstance = axios.create({
   baseURL: BASE_URL,
   headers: {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   },
 });
 
 export const tokenStorage = {
-  getAccess: () => localStorage.getItem("access_token"),
-  setAccess: (token: string) => localStorage.setItem("access_token", token),
-  removeAccess: () => localStorage.removeItem("access_token"),
+  getAccess: () => localStorage.getItem('access_token'),
+  setAccess: (token: string) => localStorage.setItem('access_token', token),
+  removeAccess: () => localStorage.removeItem('access_token'),
 
-  getRefresh: () => localStorage.getItem("refresh_token"),
-  setRefresh: (token: string) => localStorage.setItem("refresh_token", token),
-  removeRefresh: () => localStorage.removeItem("refresh_token"),
+  getRefresh: () => localStorage.getItem('refresh_token'),
+  setRefresh: (token: string) => localStorage.setItem('refresh_token', token),
+  removeRefresh: () => localStorage.removeItem('refresh_token'),
 
   clearAll: () => {
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("refresh_token");
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
   },
 };
 
@@ -60,29 +60,17 @@ axiosClient.interceptors.request.use(
       config.headers.Authorization = `Bearer ${token}`;
     }
 
-    if (import.meta.env.DEV) {
-      console.log(`🚀 ${config.method?.toUpperCase()} ${config.url}`, {
-        params: config.params,
-        data: config.data,
-      });
-    }
-
     return config;
   },
   (error) => {
-    console.error("❌ Request Error:", error);
+    console.error('❌ Request Error:', error);
     return Promise.reject(error);
   }
 );
 
 axiosClient.interceptors.response.use(
   (response: AxiosResponse) => {
-    if (import.meta.env.DEV) {
-      console.log(
-        `✅ ${response.status} ${response.config.url}`,
-        response.data
-      );
-    }
+
 
     return response.data;
   },
@@ -91,7 +79,7 @@ axiosClient.interceptors.response.use(
       _retry?: boolean;
     };
 
-    console.error("❌ API Error:", {
+    console.error('❌ API Error:', {
       status: error.response?.status,
       url: error.config?.url,
       message: error.response?.data || error.message,
@@ -101,7 +89,7 @@ axiosClient.interceptors.response.use(
       error.response?.status === 401 &&
       originalRequest &&
       !originalRequest._retry &&
-      !originalRequest.url?.includes("/auth/refresh-token")
+      !originalRequest.url?.includes('/auth/refresh-token')
     ) {
       originalRequest._retry = true;
 
@@ -121,12 +109,12 @@ axiosClient.interceptors.response.use(
 
       if (!refreshToken) {
         tokenStorage.clearAll();
-        window.location.href = "/login";
+        window.location.href = '/login';
         return Promise.reject(error);
       }
 
       try {
-        const response = await refreshClient.post("/auth/refresh-token", {
+        const response = await refreshClient.post('/auth/refresh-token', {
           refreshToken,
           accessToken: tokenStorage.getAccess(),
         });
@@ -144,9 +132,9 @@ axiosClient.interceptors.response.use(
           return axiosClient(originalRequest);
         }
       } catch (refreshError) {
-        console.error("❌ Token refresh failed:", refreshError);
+        console.error('❌ Token refresh failed:', refreshError);
         tokenStorage.clearAll();
-        window.location.href = "/login";
+        window.location.href = '/login';
       } finally {
         isRefreshing = false;
       }
