@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsString, IsNumberString } from 'class-validator';
+import { IsOptional, IsString, IsNumberString, IsEnum } from 'class-validator';
+import { Gender } from 'src/common/types/user/user.type';
 
 export class FindAllUsersDto {
     @ApiProperty({
@@ -28,4 +29,14 @@ export class FindAllUsersDto {
     @IsOptional()
     @IsNumberString({}, { message: 'Limit phải là số.' })
     pageSize?: string;
+
+    @ApiProperty({})
+    @IsOptional()
+    @IsString({ message: 'Role phải là chuỗi.' })
+    role?: string
+
+    @ApiProperty({ enum: Gender, required: false })
+    @IsOptional()
+    @IsEnum(Gender)
+    gender?: Gender
 }

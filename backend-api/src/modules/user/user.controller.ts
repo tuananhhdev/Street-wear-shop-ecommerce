@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -20,6 +21,8 @@ import { imageUploadOptions } from 'src/common/configs/upload.config';
 import type { Request } from 'express';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { SkipPermission } from 'src/common/decorators/skip-permission.decorator';
+import { IUser } from 'src/common/types/user/user.type';
+import { SoftDeleteDto } from './dto/soft-delete.dto';
 
 @ApiTags('Users')
 @Controller('users')
@@ -79,6 +82,16 @@ export class UserController {
     @UploadedFile() file: Express.Multer.File,
   ) {
     return this.userService.uploadAvatarByAdmin(id, file);
+  }
+
+  @Delete(':id')
+  @ApiOperation({ summary: 'Xóa người dùng (soft delete) - dành cho Admin' })
+  @ResponseMessage('Xóa người dùng thành công')
+  softDelete(
+    @Param('id', ObjectIdValidationPipe) id: string,
+    @Body() body: SoftDeleteDto,
+  ) {
+    return this.userService.softDelete(id, body)
   }
 
   @Patch(':userId/permissions/toggle')

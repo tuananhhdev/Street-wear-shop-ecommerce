@@ -21,7 +21,7 @@ export class AuthService {
     ) { }
 
     async register(dto: RegisterAuthDto) {
-        const userExist = await this.userModel.findOne({ email: dto.email });
+        const userExist = await this.userModel.findOne({ email: dto.email, isDeleted: false }).lean();
         if (userExist) throw new BadRequestException("Tài khoản đã tồn tại, vui lòng đăng ký tài khoản khác");
 
         const customerRole = await this.roleModel.findOne({ name: 'Customer' });
@@ -33,7 +33,7 @@ export class AuthService {
             roleId: customerRole._id
         });
 
-        const { password, __v, roleId, ...newUser } = user.toObject();
+        const { password, __v, roleId, isDeleted, deletedBy, deletedAt, ...newUser } = user.toObject();
 
         return {
             ...newUser,
@@ -89,6 +89,6 @@ export class AuthService {
         return tokens
     }
 
-   
+
 
 }

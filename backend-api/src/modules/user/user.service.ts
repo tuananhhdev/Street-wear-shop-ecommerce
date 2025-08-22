@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import * as bcrypt from 'bcrypt';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import sharp from 'sharp';
 import cloudinary from 'src/common/configs/cloundinary.config';
 import { IUser } from 'src/common/types/user/user.type';
@@ -13,6 +13,10 @@ import { RolePermissionDocument } from '../role-permissions/schema/role-permissi
 import { FindAllUsersDto } from './dto/find-all-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserDocument } from './schema/user.schema';
+import { RoleDocument } from '../role/schema/role.schema';
+import { CreateUserDto } from './dto/create-user.dto';
+import { SoftDeleteDto } from './dto/soft-delete.dto';
+
 
 @Injectable()
 export class UserService {
@@ -20,32 +24,77 @@ export class UserService {
     @InjectModel('User') private readonly userModel: Model<UserDocument>,
     @InjectModel('RolePermission')
     private readonly rolePermissionModel: Model<RolePermissionDocument>,
-  ) {}
+    @InjectModel('Role') private readonly roleModel: Model<RoleDocument>,
+  ) { }
+
+async create(body: CreateUserDto) {
+  const userExist = await this.userModel.findOne({
+    email: body.email,
+    isDeleted: false,
+  })
+
+  if (userExist) {
+    throw new BadRequestException('Tài khoản đã tồn tại, vui lòng đăng ký tài khoản mới');
+  }
+
+
+
+}
 
   async findAll(query: FindAllUsersDto) {
     const page = Number(query.page) || 1;
     const pageSize = Number(query.pageSize) || 10;
     const skip = (page - 1) * pageSize;
-
-    const filter: any = { isDeleted: false };
+  
+    const match: any = { isDeleted: false };
+  
     if (query.search) {
-      filter.$or = [
+      match.$or = [
         { fullName: { $regex: query.search, $options: 'i' } },
         { email: { $regex: query.search, $options: 'i' } },
       ];
     }
-
-    const [data, total] = await Promise.all([
-      this.userModel
-        .find(filter)
-        .skip(skip)
-        .limit(pageSize)
-        .populate('roleId', '-__v')
-        .select('-password -__v -isDeleted -deletedBy -deletedAt')
-        .lean(),
-      this.userModel.countDocuments(filter),
+  
+    if (query.gender) {
+      match.gender = query.gender;
+    }
+  
+    const pipeline: any[] = [
+      { $match: match },
+      {
+        $lookup: {
+          from: 'roles',
+          localField: 'roleId',
+          foreignField: '_id',
+          as: 'role',
+        },
+      },
+      { $unwind: '$role' },
+    ];
+  
+    // lọc theo role.name
+    if (query.role) {
+      pipeline.push({
+        $match: { 'role.name': query.role },
+      });
+    }
+  
+    // phân trang
+    const [data, totalResult] = await Promise.all([
+      this.userModel.aggregate([
+        ...pipeline,
+        { $project: { password: 0, isDeleted: 0, deletedBy: 0, deletedAt: 0 } },
+        { $skip: skip },
+        { $limit: pageSize },
+      ]),
+      this.userModel.aggregate([
+        ...pipeline,
+        { $count: 'total' },
+      ]),
     ]);
-
+  
+    const total = totalResult[0]?.total || 0;
+  
     return {
       items: data,
       pagination: {
@@ -196,7 +245,16 @@ export class UserService {
     const result = await this.userModel
       .findById(userId)
       .select('-password -__v -isDeleted -deletedBy -deletedAt')
+      .populate({ path: 'roleId', select: 'name _id' })
       .lean();
+
+    if (result && result.roleId && typeof result.roleId === 'object' && 'name' in result.roleId) {
+      const { roleId, ...rest } = result;
+      return {
+        ...rest,
+        role: (roleId as any).name,
+      };
+    }
     return result;
   }
 
@@ -240,5 +298,27 @@ export class UserService {
       isActive: newStatus,
       message: `Đã ${newStatus ? 'bật' : 'tắt'} quyền cho người dùng`,
     };
+  }
+
+  async softDelete(id: string, body: SoftDeleteDto) {
+    const deletedUser = await this.userModel.findOneAndUpdate(
+      { _id: id, isDeleted: false },
+      {
+        $set: {
+          isDeleted: true,
+          deletedBy: body.deletedBy,
+          deletedAt: new Date(),
+        },
+      },
+      { new: true }
+    )
+      .select('-password -__v -isDeleted -deletedBy -deletedAt')
+      .lean();
+
+    if (!deletedUser) throw new NotFoundException('Người dùng không tồn tại');
+
+    return deletedUser;
+
+
   }
 }

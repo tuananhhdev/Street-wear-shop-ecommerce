@@ -11,7 +11,7 @@ export class User {
     @Prop({ required: true, index: true })
     fullName: string;
 
-    @Prop({ required: true, unique: true, index: true })
+    @Prop({ required: true, index: true })
     email: string;
 
     @Prop({ required: true })
@@ -46,6 +46,12 @@ export class User {
 export type UserDocument = User & Document;
 
 export const UserSchema = SchemaFactory.createForClass(User);
+
+UserSchema.index(
+    { email: 1 },
+    { unique: true, partialFilterExpression: { isDeleted: false } }
+);
+
 
 UserSchema.virtual('role', {
     ref: 'Role',
